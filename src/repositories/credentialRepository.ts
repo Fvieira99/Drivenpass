@@ -2,11 +2,11 @@ import prisma from "../config/database.js";
 import { CreateCredentialData } from "../services/credentialService.js";
 
 export async function createCredential(
-  createCredentialData: CreateCredentialData,
+  data: CreateCredentialData,
   userId: number
 ) {
   await prisma.credential_.create({
-    data: { ...createCredentialData, userId }
+    data: { ...data, userId }
   });
 }
 
@@ -17,7 +17,7 @@ export async function findByTitleAndUserId(title: string, userId: number) {
   return credentials[0];
 }
 
-export async function findByUserId(userId: number) {
+export async function findAllByUserId(userId: number) {
   const credentials = await prisma.credential_.findMany({ where: { userId } });
   return credentials;
 }
