@@ -4,9 +4,8 @@ import validateSchema from "../middlewares/validateSchemaMiddleware.js";
 import authSchema from "../schemas/authSchema.js";
 
 const authRouter = Router();
-authRouter.use(validateSchema(authSchema));
 
-authRouter.post("/signup", signUp);
-authRouter.post("/signin", signIn);
+authRouter.post("/signup", validateSchema(authSchema), signUp);
+authRouter.post("/signin", validateSchema(authSchema), signIn);
 
 export default authRouter;

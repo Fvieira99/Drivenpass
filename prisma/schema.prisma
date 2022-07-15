@@ -11,18 +11,18 @@ datasource db {
 }
 
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
   password    String
-  Credencials Credencial[]
-  Safe_Notes  SafeNote[]
-  Cards       Card[]
-  Wifis       Wifi[]
+  credencials Credential_[]
+  safenotes   Safenote[]
+  cards       Card[]
+  wifis       Wifi[]
 
   @@map("users")
 }
 
-model Credencial {
+model Credential_ {
   id       Int    @id @default(autoincrement())
   title    String
   url      String
@@ -31,10 +31,10 @@ model Credencial {
   userId   Int
   userRef  User   @relation(fields: [userId], references: [id])
 
-  @@map("credencials")
+  @@map("credentials")
 }
 
-model SafeNote {
+model Safenote {
   id      Int    @id @default(autoincrement())
   title   String @db.VarChar(50)
   note    String @db.VarChar(1000)
@@ -42,7 +42,7 @@ model SafeNote {
   userRef User   @relation(fields: [userId], references: [id])
 
 
-  @@map("safe_notes")
+  @@map("safenotes")
 }
 
 model Card {

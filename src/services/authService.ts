@@ -12,8 +12,8 @@ const CONFIG = { expiresIn: 60 * 60 };
 export type AuthData = Omit<User, "id">;
 
 export async function createUser(createUserData: AuthData) {
-  const user = await authRepository.findByEmail(createUserData.email);
-  if (user) {
+  const existingUser = await authRepository.findByEmail(createUserData.email);
+  if (existingUser) {
     throw { type: "conflict", message: "Email is already being used" };
   }
 
@@ -31,7 +31,8 @@ export async function login(loginData: AuthData) {
     throw { type: "unauthorized", message: "Your credencials are not valid." };
   }
 
-  const token = jwt.sign({ data: user.email }, KEY, CONFIG);
+  const data = { userId: user.id };
+  const token = jwt.sign(data, KEY, CONFIG);
   return token;
 }
 

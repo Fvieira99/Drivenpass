@@ -12,7 +12,8 @@ export default function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  if (err) {
+  console.log(err);
+  if (err.type) {
     return res.status(typeToStatusCode[err.type]).send(err.message);
   }
   res.sendStatus(500);
