@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import * as cardService from "../services/cardService.js";
+import { CreateCardData } from "../repositories/cardRepository.js";
+
+export type InputCardData = Omit<CreateCardData, "userId">;
 
 export async function createCard(req: Request, res: Response) {
-  const data: cardService.CardInputData = req.body;
+  const data: InputCardData = req.body;
   const { userId }: { userId: number } = res.locals.user;
-  await cardService.createCard(data, userId);
+  await cardService.createCard({ ...data, userId });
   res.status(201).send("Created Card");
 }
 

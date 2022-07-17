@@ -1,30 +1,26 @@
 import prisma from "../config/database.js";
-import { CreateCredentialData } from "../services/credentialService.js";
+import { Credential_ } from "@prisma/client";
 
-export async function createCredential(
-  data: CreateCredentialData,
-  userId: number
-) {
+export type CreateCredentialData = Omit<Credential_, "id">;
+
+export async function createCredential(data: CreateCredentialData) {
   await prisma.credential_.create({
-    data: { ...data, userId }
+    data
   });
 }
 
 export async function findByTitleAndUserId(title: string, userId: number) {
-  const credentials = await prisma.credential_.findMany({
+  return await prisma.credential_.findFirst({
     where: { userId, title }
   });
-  return credentials[0];
 }
 
 export async function findAllByUserId(userId: number) {
-  const credentials = await prisma.credential_.findMany({ where: { userId } });
-  return credentials;
+  return await prisma.credential_.findMany({ where: { userId } });
 }
 
 export async function findById(id: number) {
-  const credential = await prisma.credential_.findUnique({ where: { id } });
-  return credential;
+  return await prisma.credential_.findUnique({ where: { id } });
 }
 
 export async function deleteCredential(id: number) {

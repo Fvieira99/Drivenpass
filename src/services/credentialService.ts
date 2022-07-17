@@ -1,42 +1,34 @@
 import { Credential_ } from "@prisma/client";
 import * as credentialRepository from "../repositories/credentialRepository.js";
-import dotenv from "dotenv";
-dotenv.config();
-
-import Cryptr from "cryptr";
-
-const cryptr = new Cryptr(process.env.CRYPTR_SECRET_KEY);
-
-export type CreateCredentialData = Omit<Credential_, "id" | "userId">;
+import * as serviceUtil from "../utils/serviceUtil.js";
 
 export async function createCredential(
-  data: CreateCredentialData,
-  userId: number
+  data: credentialRepository.CreateCredentialData
 ) {
   const existingCredencial = await credentialRepository.findByTitleAndUserId(
     data.title,
-    userId
+    data.userId
   );
   if (existingCredencial) {
     throw { type: "conflict", message: "Title is already being used" };
   }
 
-  const hashedPassword = encryptPassword(data.password);
+  const hashedPassword = serviceUtil.encryptData(data.password);
 
-  await credentialRepository.createCredential(
-    { ...data, password: hashedPassword },
-    userId
-  );
+  await credentialRepository.createCredential({
+    ...data,
+    password: hashedPassword
+  });
 }
 
 export async function getAllCredentials(userId: number) {
   const credentials = await credentialRepository.findAllByUserId(userId);
-  const decryptedCredentials = decryptCredentials(credentials);
+  const decryptedCredentials = decryptMultipleCredentials(credentials);
   return decryptedCredentials;
 }
 
-export async function getOneCredential(id: number, userId: number) {
-  const credential = await credentialRepository.findById(id);
+export async function getOneCredential(credentialId: number, userId: number) {
+  const credential = await credentialRepository.findById(credentialId);
   if (!credential) {
     throw { type: "not_found", message: "Credential does not exist!" };
   }
@@ -47,13 +39,13 @@ export async function getOneCredential(id: number, userId: number) {
       message: "You are not allowed to see this credential."
     };
   }
-  const decryptedPassword = decryptPassword(credential.password);
+  const decryptedPassword = serviceUtil.decryptData(credential.password);
 
   return { ...credential, password: decryptedPassword };
 }
 
-export async function deleteCredential(id: number, userId: number) {
-  const credential = await credentialRepository.findById(id);
+export async function deleteCredential(credentialId: number, userId: number) {
+  const credential = await credentialRepository.findById(credentialId);
   if (!credential) {
     throw { type: "not_found", message: "Credential does not exist!" };
   }
@@ -65,23 +57,13 @@ export async function deleteCredential(id: number, userId: number) {
     };
   }
 
-  await credentialRepository.deleteCredential(id);
+  await credentialRepository.deleteCredential(credentialId);
 }
 
-function encryptPassword(password: string) {
-  const encryptedPassword = cryptr.encrypt(password);
-  return encryptedPassword;
-}
-
-function decryptCredentials(credentials: Credential_[]) {
+function decryptMultipleCredentials(credentials: Credential_[]) {
   for (let credential of credentials) {
     const encryptedPassword = credential.password;
-    credential.password = decryptPassword(encryptedPassword);
+    credential.password = serviceUtil.decryptData(encryptedPassword);
   }
   return credentials;
-}
-
-function decryptPassword(password: string) {
-  const decryptedPassword = cryptr.decrypt(password);
-  return decryptedPassword;
 }

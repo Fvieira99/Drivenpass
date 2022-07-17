@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { CardInputData } from "../services/cardService.js";
+import { InputCardData } from "../controllers/cardController.js";
 
 const CARD_NUMBER_PATTERN = /^[0-9]{4}-?[0-9]{4}-?[0-9]{4}-?[0-9]{4}$/;
 
@@ -9,7 +9,7 @@ const CARD_PASSWORD_PATTERN = /^[0-9]{4}$/;
 
 const CARD_CVV_PATTERN = /^[0-9]{3}$/;
 
-const cardSchema = Joi.object<CardInputData>({
+const cardSchema = Joi.object<InputCardData>({
   title: Joi.string().required(),
   cardNumber: Joi.string().pattern(CARD_NUMBER_PATTERN).required(),
   securityCode: Joi.string().pattern(CARD_CVV_PATTERN),

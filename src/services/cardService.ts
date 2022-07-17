@@ -1,19 +1,12 @@
-import Cryptr from "cryptr";
-import dotenv from "dotenv";
 import dayjs from "dayjs";
 import * as cardRepository from "../repositories/cardRepository.js";
+import * as serviceUtil from "../utils/serviceUtil.js";
 import { Card } from "@prisma/client";
 
-dotenv.config();
-
-const cryptr = new Cryptr(process.env.CRYPTR_SECRET_KEY);
-
-export type CardInputData = Omit<cardRepository.CreateCardData, "userId">;
-
-export async function createCard(data: CardInputData, userId: number) {
+export async function createCard(data: cardRepository.CreateCardData) {
   const existingTitle = await cardRepository.findByTitleAndUserId(
     data.title,
-    userId
+    data.userId
   );
   if (existingTitle) {
     throw { type: "conflict", message: "Title is already being used" };
@@ -22,15 +15,14 @@ export async function createCard(data: CardInputData, userId: number) {
     throw { type: "bad_request", message: "You cannot save expired cards" };
   }
   const formatedCardNumber = formatCardNumber(data.cardNumber);
-  const encryptedCVV = encryptData(data.securityCode);
-  const encryptedPassword = encryptData(data.password);
+  const encryptedCVV = serviceUtil.encryptData(data.securityCode);
+  const encryptedPassword = serviceUtil.encryptData(data.password);
 
   const createCardData: cardRepository.CreateCardData = {
     ...data,
     cardNumber: formatedCardNumber,
     securityCode: encryptedCVV,
-    password: encryptedPassword,
-    userId
+    password: encryptedPassword
   };
 
   await cardRepository.createCard(createCardData);
@@ -38,7 +30,7 @@ export async function createCard(data: CardInputData, userId: number) {
 
 export async function getAllCards(userId: number) {
   const cards = await cardRepository.findAllByUserId(userId);
-  const decryptedCards = decryptCardsData(cards);
+  const decryptedCards = decryptMultipleCardsData(cards);
   return decryptedCards;
 }
 
@@ -57,8 +49,8 @@ export async function getOneCard(cardId: number, userId: number) {
       message: "You are not allowed to see this card."
     };
   }
-  const decryptedPassword = decryptData(card.password);
-  const decryptedCVV = decryptData(card.securityCode);
+  const decryptedPassword = serviceUtil.decryptData(card.password);
+  const decryptedCVV = serviceUtil.decryptData(card.securityCode);
 
   return { ...card, password: decryptedPassword, securityCode: decryptedCVV };
 }
@@ -94,22 +86,14 @@ function formatCardNumber(cardNumber: string) {
   return cardNumber;
 }
 
-function encryptData(data: string) {
-  return cryptr.encrypt(data);
-}
-
-function decryptCardsData(cards: Card[]) {
+function decryptMultipleCardsData(cards: Card[]) {
   for (let card of cards) {
     const password = card.password;
     const cvv = card.securityCode;
-    card.password = decryptData(password);
-    card.securityCode = decryptData(cvv);
+    card.password = serviceUtil.decryptData(password);
+    card.securityCode = serviceUtil.decryptData(cvv);
   }
   return cards;
-}
-
-function decryptData(data: string) {
-  return cryptr.decrypt(data);
 }
 
 function isExpiredCard(expirationDate: string) {
