@@ -38,8 +38,8 @@ Drivenpass is a REST API that simulates a password manager. You can use it to sa
 
 ### Create Credential
 
-```
-http POST /credentials
+```http 
+POST /credentials
 ```
 
 
