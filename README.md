@@ -25,7 +25,7 @@ Drivenpass is a REST API that simulates a password manager. You can use it to sa
 
 ## Features
 
-**You must create an account to use any feature. ** 
+**You must create an account to use any feature.** 
 
 - **Website Credentials:** Create/ List all or one specific/ Delete 
 - **Safenotes:** Create/ List all or one specific/ Delete 
