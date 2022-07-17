@@ -20,8 +20,8 @@ export async function getAllSafenotes(userId: number) {
   return safenotes;
 }
 
-export async function getOneSafenote(id: number, userId: number) {
-  const safenote = await safenoteRepository.findById(id);
+export async function getOneSafenote(safenoteId: number, userId: number) {
+  const safenote = await safenoteRepository.findById(safenoteId);
   if (!safenote) {
     throw { type: "not_found", message: "Safenote does not exist" };
   }
@@ -35,8 +35,8 @@ export async function getOneSafenote(id: number, userId: number) {
   return safenote;
 }
 
-export async function deleteSafenote(id: number, userId: number) {
-  const safenote = await safenoteRepository.findById(id);
+export async function deleteSafenote(safenoteId: number, userId: number) {
+  const safenote = await safenoteRepository.findById(safenoteId);
   if (!safenote) {
     throw { type: "not_found", message: "Safenote does not exist" };
   }
@@ -47,5 +47,5 @@ export async function deleteSafenote(id: number, userId: number) {
       message: "You are not allowed to delete this safenote!"
     };
   }
-  await safenoteRepository.deleteSafenote(id);
+  await safenoteRepository.deleteSafenote(safenoteId);
 }

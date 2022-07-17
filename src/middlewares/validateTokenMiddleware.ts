@@ -12,7 +12,6 @@ export default function validateToken(
 ) {
   const authorization = req.headers["authorization"];
   const token = authorization?.replace("Bearer ", "");
-  console.log(token);
   if (!token) {
     throw { type: "unauthorized", message: "You don't have a token." };
   }

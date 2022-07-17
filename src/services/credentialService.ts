@@ -69,8 +69,8 @@ export async function deleteCredential(id: number, userId: number) {
 }
 
 function encryptPassword(password: string) {
-  const hashedPassword = cryptr.encrypt(password);
-  return hashedPassword;
+  const encryptedPassword = cryptr.encrypt(password);
+  return encryptedPassword;
 }
 
 function decryptCredentials(credentials: Credential_[]) {
