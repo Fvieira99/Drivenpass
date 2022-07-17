@@ -4,7 +4,7 @@
 <h1 align="center">
   Drivenpass
 </h1>
-<div align="center">
+<div>
   <h2>
     Stack Used
   </h2>
