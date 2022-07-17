@@ -21,10 +21,15 @@
 
 Drivenpass is a REST API that simulates a password manager. You can use it to save all your passwords and safenotes safely.
 
-## Features
-
-**You must create an account to use all features** 
-
 </br>
 
-- Create/ List All or One Website Credential/ Delete Credential
+## Features
+
+**You must create an account to use any feature. ** 
+
+-**Website Credentials:** Create/ List all or one specific/ Delete 
+-**Safenotes:** Create/ List all or one specific/ Delete 
+-**Cards:** Create/ List all or one specific/ Delete
+-**Wifis** Create/ List all or one specific/ Delete
+
+
