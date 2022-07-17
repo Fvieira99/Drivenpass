@@ -7,7 +7,9 @@
 
 
 <div>
-  <h2>**Stack Used**</h2>
+  
+
+  <h2>Stack Used</h2>
 
   <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" height="30px"/>
   <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white" height="30px"/>
