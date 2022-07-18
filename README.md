@@ -138,8 +138,20 @@ GET credentials/credential/:id
 
 👀 You must pass a valid and existing id, otherwise the API will throw an error.
 
-#
+</br>
 
 ## Safenotes
+  
+### - Create Safenote
+
+### Request:
+
+| Body             | Type     | Description                        |
+| :--------------- | :------- | :--------------------------------- |
+| `title`           | `string` | **Unique**/**Required**. Register title      |
+| `user`         | `string` | **Required**. Website Username          |
+| `password` | `string` | **Required**. Website Password |
+| `url` | `string` | **Required**. Website URL |
+
 
 
