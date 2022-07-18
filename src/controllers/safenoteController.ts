@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import * as safenoteService from "../services/safenoteService.js";
+import { CreateSafenoteData } from "../repositories/safenoteRepository.js";
+
+export type InputSafenoteData = Omit<CreateSafenoteData, "userId">;
 
 export async function createSafenote(req: Request, res: Response) {
-  const data: safenoteService.CreateSafenoteData = req.body;
+  const data: InputSafenoteData = req.body;
   const { userId }: { userId: number } = res.locals.user;
-  await safenoteService.createSafenote(data, userId);
+  await safenoteService.createSafenote({ ...data, userId });
   res.status(201).send("Created safenote!");
 }
 

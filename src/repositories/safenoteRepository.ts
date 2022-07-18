@@ -1,18 +1,19 @@
 import prisma from "../config/database.js";
-import { CreateSafenoteData } from "../services/safenoteService.js";
+import { Safenote } from "@prisma/client";
 
-export async function createSafenote(data: CreateSafenoteData, userId: number) {
-  await prisma.safenote.create({ data: { ...data, userId } });
+export type CreateSafenoteData = Omit<Safenote, "id">;
+
+export async function createSafenote(data: CreateSafenoteData) {
+  await prisma.safenote.create({ data });
 }
 
 export async function findByTitleAndUserId(title: string, userId: number) {
-  const safenote = await prisma.safenote.findMany({
+  return await prisma.safenote.findFirst({
     where: {
       title,
       userId
     }
   });
-  return safenote[0];
 }
 
 export async function findAllByUserId(userId: number) {

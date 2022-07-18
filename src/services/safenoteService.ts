@@ -1,18 +1,18 @@
 import { Safenote } from "@prisma/client";
 import * as safenoteRepository from "../repositories/safenoteRepository.js";
 
-export type CreateSafenoteData = Omit<Safenote, "id" | "userId">;
-
-export async function createSafenote(data: CreateSafenoteData, userId: number) {
+export async function createSafenote(
+  data: safenoteRepository.CreateSafenoteData
+) {
   const existingSafenote = await safenoteRepository.findByTitleAndUserId(
     data.title,
-    userId
+    data.userId
   );
   if (existingSafenote) {
     throw { type: "conflict", message: "Title already exists" };
   }
 
-  await safenoteRepository.createSafenote(data, userId);
+  await safenoteRepository.createSafenote(data);
 }
 
 export async function getAllSafenotes(userId: number) {
