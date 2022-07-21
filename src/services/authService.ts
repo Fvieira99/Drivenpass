@@ -27,8 +27,9 @@ export async function createUser(createUserData: AuthData) {
 
 export async function login(loginData: AuthData) {
   const user = await authRepository.findByEmail(loginData.email);
+
   if (!user || !isCorrectPassword(loginData.password, user.password)) {
-    throw { type: "unauthorized", message: "Your credencials are not valid." };
+    throw { type: "unauthorized", message: "Your credentials are not valid." };
   }
 
   const data = { userId: user.id };
