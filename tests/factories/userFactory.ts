@@ -18,7 +18,8 @@ interface Login {
 }
 
 export async function createUser(login: Login) {
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: { ...login, password: bcrypt.hashSync(login.password, SALT) }
   });
+  return user;
 }
